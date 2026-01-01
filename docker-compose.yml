@@ -1,0 +1,29 @@
+services:
+  mc-server:
+    image: itzg/minecraft-server:java17
+    container_name: minecraft-cursed-walking
+    ports:
+      - "25565:25565"
+    environment:
+      EULA: "TRUE"
+      TYPE: "FORGE"
+      VERSION: "1.20.1"
+      MEMORY: "6G"
+      FORGE_VERSION: "47.4.0"
+      OPS: "1Storce1"
+    volumes:
+      - ./data:/data
+    restart: unless-stopped
+
+  mc-bot:
+    build: ./bot
+    container_name: minecraft-bot
+    restart: unless-stopped
+    depends_on:
+      - mc-server
+    environment:
+      DISCORD_TOKEN: "YOUR_DISCORD_BOT_TOKEN"
+      CHANNEL_ID: "YOUR_DISCORD_CHANNEL_ID"
+    volumes:
+      # Mount the same local data folder as read-only for the bot
+      - ./data:/data:ro
