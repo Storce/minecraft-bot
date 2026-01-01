@@ -22,8 +22,8 @@ services:
     depends_on:
       - mc-server
     environment:
-      DISCORD_TOKEN: "YOUR_DISCORD_BOT_TOKEN"
-      CHANNEL_ID: "YOUR_DISCORD_CHANNEL_ID"
+      DISCORD_TOKEN: "${DISCORD_TOKEN}"
+      CHANNEL_ID: "${CHANNEL_ID}"
     volumes:
       # Mount the same local data folder as read-only for the bot
       - ./data:/data:ro
