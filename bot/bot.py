@@ -2,7 +2,6 @@ import os
 import discord
 from discord.ext import tasks
 
-# Configuration from Environment Variables
 TOKEN = os.getenv('DISCORD_TOKEN')
 try:
     CHANNEL_ID = int(os.getenv('CHANNEL_ID'))
@@ -62,7 +61,6 @@ class LogBot(discord.Client):
     async def before_read_logs(self):
         await self.wait_until_ready()
 
-# Ensure you have "Message Content Intent" enabled in Discord Dev Portal
 intents = discord.Intents.default()
 client = LogBot(intents=intents)
 client.run(TOKEN)

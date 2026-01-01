@@ -1,4 +1,4 @@
-FROM python:3.11-slim
+FROM public.ecr.aws/docker/library/python:3.11-slim
 RUN pip install discord.py
 WORKDIR /app
 COPY bot.py .
