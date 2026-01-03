@@ -49,12 +49,13 @@ class LogBot(discord.Client):
         # Aqua color (§b) for the waiting message
         self.send_rcon_cmd("say §bI've sent a message to Steve!")
         
-        prompt = (f"Context: You are Steve from Minecraft. Respond concisely (max 3 sentences) "
-                  f"referencing blocks or Minecraft mechanics. Question: {query}")
+        prompt = (f"Context: You are Steve from Minecraft. Respond very concisely (max 3 sentences)."
+                  "If you cannot responde concisely, say the response is too large instead."
+                  f"Reference blocks or Minecraft mechanics. Question: {query}")
         
         try:
             response = genai_client.models.generate_content(
-                model="gemini-2.0-flash",
+                model="gemini-2.5-flash",
                 contents=prompt
             )
             clean_response = response.text.strip().replace('\n', ' ')
@@ -62,11 +63,13 @@ class LogBot(discord.Client):
             
             # Gold (§6) and Bold (§l) for Steve's response
             self.send_rcon_cmd(f"say §6§l{clean_response}")
+            return f"🤖 Query response: {clean_response}"
             
         except Exception as e:
             logger.error(f"Gemini API failed: {e}")
             # Red color (§c) for errors
             self.send_rcon_cmd(f"say §cA creeper blew up the messenger: {str(e)[:50]}")
+            return f"💀 Server error: {e}"
 
     @tasks.loop(seconds=2)
     async def read_logs(self):
@@ -92,7 +95,7 @@ class LogBot(discord.Client):
                 
                 if "--yo" in line:
                     query = line.split("--yo")[1].strip()
-                    await self.handle_gemini_query(query)
+                    msg = await self.handle_gemini_query(query)
 
                 if "joined the game" in line:
                     user = line.split("]: ")[1].split(" joined")[0]
@@ -105,11 +108,11 @@ class LogBot(discord.Client):
                 elif "Can't keep up!" in line:
                     logger.warning("Trigger: Server Lag Detected")
                     msg = "⚠️ **Server Lag Detected**"
-                elif "[Server thread/INFO]: <" in line:
-                    user = line.split("<")[1].split(">")[0]
-                    content = line.split("> ")[1].strip()
-                    logger.info(f"Trigger: Chat Message from {user}")
-                    msg = f"💬 **{user}**: {content}"
+                #elif "[Server thread/INFO]: <" in line:
+                #    user = line.split("<")[1].split(">")[0]
+                #    content = line.split("> ")[1].strip()
+                #    logger.info(f"Trigger: Chat Message from {user}")
+                #    msg = f"💬 **{user}**: {content}"
 
                 if msg:
                     await channel.send(msg)
