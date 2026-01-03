@@ -1,7 +1,7 @@
 services:
   mc-server:
     image: itzg/minecraft-server:java17
-    container_name: minecraft-cursed-walking
+    container_name: minecraft-server
     ports:
       - "25565:25565"
     environment:
@@ -11,6 +11,9 @@ services:
       MEMORY: "6G"
       FORGE_VERSION: "47.4.0"
       OPS: "1Storce1"
+      ENABLE_RCON: "TRUE"
+      RCON_PASSWORD: "${RCON_PASSWORD}"
+      RCON_PORT: 25595
     volumes:
       - ./data:/data
     restart: unless-stopped
@@ -24,6 +27,8 @@ services:
     environment:
       DISCORD_TOKEN: "${DISCORD_TOKEN}"
       CHANNEL_ID: "${CHANNEL_ID}"
+      GEMINI_API_KEY: "${GEMINI_API_KEY}"
+      RCON_PASSWORD: "${RCON_PASSWORD}"
     volumes:
       # Mount the same local data folder as read-only for the bot
       - ./data:/data:ro
