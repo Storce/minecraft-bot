@@ -45,22 +45,28 @@ class LogBot(discord.Client):
 
     async def handle_gemini_query(self, query):
         logger.info(f"Trigger: Gemini request received: '{query}'")
-        self.send_rcon_cmd("I've sent a message to Steve!")
+        
+        # Aqua color (§b) for the waiting message
+        self.send_rcon_cmd("say §bI've sent a message to Steve!")
         
         prompt = (f"Context: You are Steve from Minecraft. Respond concisely (max 3 sentences) "
                   f"referencing blocks or Minecraft mechanics. Question: {query}")
         
         try:
             response = genai_client.models.generate_content(
-                model="gemini-2.5-flash",
+                model="gemini-2.0-flash",
                 contents=prompt
             )
             clean_response = response.text.strip().replace('\n', ' ')
             logger.info("Gemini API successful.")
-            self.send_rcon_cmd(f"say {clean_response}")
+            
+            # Gold (§6) and Bold (§l) for Steve's response
+            self.send_rcon_cmd(f"say §6§l{clean_response}")
+            
         except Exception as e:
             logger.error(f"Gemini API failed: {e}")
-            self.send_rcon_cmd(f"A creeper blew up the messager: {str(e)[:50]}")
+            # Red color (§c) for errors
+            self.send_rcon_cmd(f"say §cA creeper blew up the messenger: {str(e)[:50]}")
 
     @tasks.loop(seconds=2)
     async def read_logs(self):
