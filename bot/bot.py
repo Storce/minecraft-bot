@@ -105,9 +105,9 @@ class LogBot(discord.Client):
                     user = line.split("]: ")[1].split(" left")[0]
                     logger.info(f"Trigger: Player Leave - {user}")
                     msg = f"🔴 **{user}** left"
-                elif "Can't keep up!" in line:
-                    logger.warning("Trigger: Server Lag Detected")
-                    msg = "⚠️ **Server Lag Detected**"
+                # elif "Can't keep up!" in line:
+                #     logger.warning("Trigger: Server Lag Detected")
+                #     msg = "⚠️ **Server Lag Detected**"
                 #elif "[Server thread/INFO]: <" in line:
                 #    user = line.split("<")[1].split(">")[0]
                 #    content = line.split("> ")[1].strip()
